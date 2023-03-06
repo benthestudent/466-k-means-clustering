@@ -1,0 +1,25 @@
+New Tasks: (add tasks here if they come up)
+
+
+
+
+
+Ben
+-create Mushroom class
+-create Cluster class - contains arraylist of mushrooms, key, findDensity
+-nominal distance method
+-cluster evaluation method to determine density and if clusters are good enough
+
+Daksh
+-read/process in data
+-store data as arraylist of Mushroom objects
+-some way to combine the distances (http://www.econ.upf.edu/~michael/stanford/maeb4.pdf - last few pages explain)
+-f1 score method
+
+Filip
+-euclidian distance method
+-main method
+-k-means clustering alg method -> fills hashmap with clusters
+
+
+Notes:
