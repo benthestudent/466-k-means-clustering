@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Mushroom {
 
 //    Variable Information:
@@ -97,11 +99,65 @@ public class Mushroom {
              + "Season: " + season;
     }
 
-
     public double findEuclidianDistance(Mushroom other){
         //find Euclidian distance between numeric values of this mushroom object and the other mushroom
-        return 0;
+        //HashMap<String, Double> featureDistances = new HashMap<>();
+        ArrayList<Double> euclideanDistances = new ArrayList<>();
+
+        euclideanDistances.add(findSingleEuclidDist(other.capDiameter, this.capDiameter));
+        euclideanDistances.add(findSingleEuclidDist(other.capShape, this.capShape));
+        euclideanDistances.add(findSingleEuclidDist(other.capSurface, this.capSurface));
+        euclideanDistances.add(findSingleEuclidDist(other.capColor, this.capColor));
+        euclideanDistances.add(findSingleEuclidDist(other.bruiseOrBleeds, this.bruiseOrBleeds));
+        euclideanDistances.add(findSingleEuclidDist(other.gillAttachment, this.gillAttachment));
+        euclideanDistances.add(findSingleEuclidDist(other.gillColor, this.gillColor));
+        euclideanDistances.add(findSingleEuclidDist(other.stemHeight, this.stemHeight));
+        euclideanDistances.add(findSingleEuclidDist(other.stemWidth, this.stemWidth));
+        euclideanDistances.add(findSingleEuclidDist(other.stemRoot, this.stemRoot));
+        euclideanDistances.add(findSingleEuclidDist(other.stemSurface, this.stemSurface));
+        euclideanDistances.add(findSingleEuclidDist(other.stemColor, this.stemColor));
+        euclideanDistances.add(findSingleEuclidDist(other.veilType, this.veilType));
+        euclideanDistances.add(findSingleEuclidDist(other.veilColor, this.veilColor));
+        euclideanDistances.add(findSingleEuclidDist(other.hasRing, this.hasRing));
+        euclideanDistances.add(findSingleEuclidDist(other.ringType, this.ringType));
+        euclideanDistances.add(findSingleEuclidDist(other.sporePrintColor, this.sporePrintColor));
+        euclideanDistances.add(findSingleEuclidDist(other.habitat, this.habitat));
+        euclideanDistances.add(findSingleEuclidDist(other.season, this.season));
+
+        double vectorMagnitude = 0.0;
+        for(double val: euclideanDistances){
+            vectorMagnitude += val*val;
+        }
+        vectorMagnitude = Math.sqrt(vectorMagnitude);
+
+        for(int i = 0; i < euclideanDistances.size(); i++){
+            double normalizedDist = euclideanDistances.get(i) / vectorMagnitude;
+            euclideanDistances.add(i, normalizedDist);
+        }
+
+         double sum = 0.0;
+         for(double val: euclideanDistances){
+             sum += val;
+         }
+
+        return sum;
     }
+
+    public static double findSingleEuclidDist(double a, double b) {
+        return Math.sqrt(a*a + b*b);
+    }
+
+    public static double findSingleEuclidDist(boolean a, boolean b){
+        return a == b ? 0.0 : 2.0;
+    }
+
+    public static double findSingleEuclidDist(char a, char b){
+        //Using one hot encoding, catagorical data represented as array, get euclidean dist of array
+        //In this case if they match euclid
+        return a == b ? 0.0 : 2.0;
+    }
+
+
 
     public double findNominalDistance(Mushroom other){
         //find distance between nominal values of this mushroom object and another mushroom

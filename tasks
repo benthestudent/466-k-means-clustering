@@ -5,21 +5,26 @@ New Tasks: (add tasks here if they come up)
 
 
 Ben
--create Mushroom class
--create Cluster class - contains arraylist of mushrooms, key, findDensity
+DONE -create Mushroom class
+DONE -create Cluster class - contains arraylist of mushrooms, key, findDensity
 -nominal distance method
 -cluster evaluation method to determine density and if clusters are good enough
 
 Daksh
--read/process in data
--store data as arraylist of Mushroom objects
--some way to combine the distances (http://www.econ.upf.edu/~michael/stanford/maeb4.pdf - last few pages explain)
+DONE -read/process in data
+DONE -store data as arraylist of Mushroom objects
+DONE -some way to combine the distances (http://www.econ.upf.edu/~michael/stanford/maeb4.pdf - last few pages explain)
 -f1 score method
 
 Filip
--euclidian distance method
+DONE -euclidian distance method
 -main method
 -k-means clustering alg method -> fills hashmap with clusters
 
 
 Notes:
+
+
+Euclidean Dist:
+    - For qualitative features using one hot encoding -> euclidean dist 0 if match, 2 if not matching
+    - Using softmax function to normalize data
