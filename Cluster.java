@@ -19,6 +19,11 @@ public class Cluster {
         this.clusterMushrooms = new ArrayList<>();
     }
 
-
-
+    public double findDensity() {
+        double squareSum = 0.0;
+        for(Mushroom shroom: clusterMushrooms){
+            squareSum += shroom.findCombinedDistance(centroid) * shroom.findCombinedDistance(centroid);
+        }
+        return Math.sqrt(squareSum) / clusterMushrooms.size();
+    }
 }

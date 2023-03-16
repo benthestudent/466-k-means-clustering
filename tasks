@@ -6,7 +6,6 @@ New Tasks: (add tasks here if they come up)
 
 Ben
 DONE -create Mushroom class
-DONE -create Cluster class - contains arraylist of mushrooms, key, findDensity
 -nominal distance method
 -cluster evaluation method to determine density and if clusters are good enough
 
@@ -20,7 +19,7 @@ Filip
 DONE -euclidian distance method
 -main method
 -k-means clustering alg method -> fills hashmap with clusters
-
+DONE -create Cluster class - contains arraylist of mushrooms, centroid, findDensity
 
 Notes:
 
