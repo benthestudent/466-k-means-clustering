@@ -24,7 +24,7 @@ public class Mushroom {
 //            7. gill-spacing (n):         close=c, distant=d, none=f
     private char gillAttachment;
 //   8. gill-color (n):           see cap-color + none=f
-    private boolean gillColor;
+    private char gillColor;
 //   9. stem-height (m):			float number in cm
     private double stemHeight;
 //   10. stem-width (m):			float number in mm
@@ -33,13 +33,13 @@ public class Mushroom {
 //    rhizomorphs=z, rooted=r
     private char stemRoot;
 //   12. stem-surface (n): 		see cap-surface + none=f
-    private boolean stemSurface;
+    private char stemSurface;
 //   13. stem-color (n):			see cap-color + none=f
     private char stemColor;
 //   14. veil-type (n):           partial=p, universal=
-    private boolean veilType; 
+    private char veilType;
 //   15. veil-color (n):          see cap-color + none=f
-    private boolean veilColor;
+    private char veilColor;
 //   16. has-ring (n):            ring=t, none=f
     private boolean hasRing;
 //   17. ring-type (n):           cobwebby=c, evanescent=e, flaring=r, grooved=g,
@@ -53,8 +53,8 @@ public class Mushroom {
 //   20. season (n):				spring=s, summer=u, autumn=a, winter=w
     private char season;
     public Mushroom(double capDiameter, char capShape, char capSurface, char capColor, boolean bruiseOrBleeds,
-        char gillAttachment, boolean gillColor, double stemHeight, double stemWidth, char stemRoot,
-        boolean stemSurface, char stemColor, boolean veilType, boolean veilColor, boolean hasRing,
+        char gillAttachment, char gillColor, double stemHeight, double stemWidth, char stemRoot,
+        char stemSurface, char stemColor, char veilType, char veilColor, boolean hasRing,
         char ringType, char sporePrintColor, char habitat, char season) {
         this.capDiameter = capDiameter;
         this.capShape = capShape;
