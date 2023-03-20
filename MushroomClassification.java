@@ -6,7 +6,15 @@ import java.util.ArrayList;
 public class MushroomClassification {
 
     public static void main(String args[]){
-        readData();
+        ArrayList<Mushroom> mushrooms = new ArrayList<>();
+        mushrooms = readData();
+
+        ArrayList<Cluster> clusters = new ArrayList<>();
+        clusters = kMeans(mushrooms, 2, 20);
+
+        System.out.println("Complete");
+
+        clusterEvaluation(clusters);
     }
 
     public static char emptyLineCheck(String line){
@@ -36,13 +44,14 @@ public class MushroomClassification {
                 
                 String[] row = line.split(delimiter);
 
-                
+                // pass in the mushroom's classification, so we can examine the accuracy of the algorithm
+                char classification = emptyLineCheck(row[0]);
 
                 double capDiameter = Double.parseDouble(row[1]);
                 char capShape = emptyLineCheck(row[2]);
                 char capSurface = emptyLineCheck(row[3]);
                 char capColor = emptyLineCheck(row[4]);
-                boolean bruiseOrBleeds = row[5].equals("t");
+                char bruiseOrBleeds = emptyLineCheck(row[5]);
                 char gillAttachment = emptyLineCheck(row[6]);
                 char gillColor = emptyLineCheck(row[8]);
                 double stemHeight = Double.parseDouble(row[9]);
@@ -52,15 +61,19 @@ public class MushroomClassification {
                 char stemColor = emptyLineCheck(row[13]);
                 char veilType = emptyLineCheck(row[14]);
                 char veilColor = emptyLineCheck(row[15]);
-                boolean ringNumber = row[16].equals("t");
+                char ringNumber = emptyLineCheck(row[16]);
                 char ringType = emptyLineCheck(row[17]);
                 char sporePrintColor = emptyLineCheck(row[18]);
                 char habitat = emptyLineCheck(row[19]);
                 char season = emptyLineCheck(row[20]);
-                Mushroom mushroom = new Mushroom(capDiameter, capShape, capSurface, capColor, bruiseOrBleeds, 
+                Mushroom mushroom = new Mushroom(classification, capDiameter, capShape, capSurface, capColor, bruiseOrBleeds,
                 gillAttachment, gillColor, stemHeight, stemWidth, stemRoot, stemSurface, stemColor, veilType, 
                 veilColor, ringNumber, ringType, sporePrintColor, habitat, season);
                 data.add(mushroom);
+
+
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,6 +84,72 @@ public class MushroomClassification {
             System.out.println(mushroom);
         }
         return data;
+    }
+
+
+    public static ArrayList<Cluster> kMeans(ArrayList<Mushroom> mushrooms, int k, int maxIterations) {
+        // Initialize k clusters with random centroids
+        ArrayList<Cluster> clusters = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            int randomIndex = (int) (Math.random() * mushrooms.size());
+            Mushroom randomMushroom = mushrooms.get(randomIndex);
+            Cluster cluster = new Cluster(randomMushroom);
+            clusters.add(cluster);
+        }
+
+        // Perform k-means iterations
+        for (int iteration = 0; iteration < maxIterations; iteration++) {
+            // Assign each mushroom to the nearest cluster
+            // clear the cluster's mushrooms for each iteration
+            for(Cluster c : clusters){
+                c.clusterMushrooms.clear();
+            }
+            for (Mushroom mushroom : mushrooms) {
+                double minDistance = Double.MAX_VALUE;
+                Cluster nearestCluster = null;
+                for (Cluster cluster : clusters) {
+                    double distance = mushroom.findDistance(cluster.centroid);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestCluster = cluster;
+                    }
+                }
+                nearestCluster.clusterMushrooms.add(mushroom);
+            }
+
+            // Update centroids of each cluster
+            boolean converged = true;
+            for (Cluster cluster : clusters) {
+                if (!cluster.clusterMushrooms.isEmpty()) {
+                    converged = converged & cluster.updateCentroid();
+                }
+            }
+            if(converged){
+                return clusters;
+            }
+        }
+
+        return clusters;
+    }
+
+
+    public static void clusterEvaluation(ArrayList<Cluster> clusters){
+        // this method prints the ratio between poisonous and edible mushrooms in each cluster
+        int i = 0;
+        for(Cluster c : clusters){
+            int p_ratio = 0;
+            int e_ratio = 0;
+            for(Mushroom m : c.clusterMushrooms){
+                if(m.getClassification() == 'p'){
+                    p_ratio ++;
+                }else{
+                    e_ratio++;
+                }
+            }
+            System.out.printf("In cluster %d, there were %d poisonous mushrooms and %d edible mushrooms.\n", i, p_ratio, e_ratio);
+            System.out.printf("\tPercent poisonous: %f vs Percent edible %f\n\n", (double) p_ratio / c.clusterMushrooms.size(), (double) e_ratio / c.clusterMushrooms.size());
+            i++;
+        }
     }
 
 }

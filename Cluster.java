@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Cluster {
 
@@ -6,7 +9,9 @@ public class Cluster {
     public Mushroom centroid;
 
     public Cluster(Mushroom centroid){
-        this.centroid = centroid;
+        // it's important that the centroid does not refer to any actual mushroom,
+        // so we can use this copy method to create a clone of a mushroom in the dataset for our centroid
+        this.centroid = centroid.copy();
         clusterMushrooms = new ArrayList<>();
     }
 
@@ -22,51 +27,83 @@ public class Cluster {
     public double findDensity() {
         double squareSum = 0.0;
         for(Mushroom shroom: clusterMushrooms){
-            squareSum += shroom.findCombinedDistance(centroid) * shroom.findCombinedDistance(centroid);
+            squareSum += shroom.findDistance(centroid) * shroom.findDistance(centroid);
         }
         return Math.sqrt(squareSum) / clusterMushrooms.size();
     }
 
-    public static ArrayList<Cluster> kMeans(ArrayList<Mushroom> mushrooms, int k, int maxIterations) {
-        // Initialize k clusters with random centroids
-        ArrayList<Cluster> clusters = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
-            int randomIndex = (int) (Math.random() * mushrooms.size());
-            Mushroom randomMushroom = mushrooms.get(randomIndex);
-            Cluster cluster = new Cluster(randomMushroom);
-            clusters.add(cluster);
+
+
+
+    public boolean updateCentroid(){
+        if(this.clusterMushrooms.isEmpty()){
+            return false;
         }
-    
-        // Perform k-means iterations
-        for (int iteration = 0; iteration < maxIterations; iteration++) {
-            // Assign each mushroom to the nearest cluster
-            for (Mushroom mushroom : mushrooms) {
-                double minDistance = Double.MAX_VALUE;
-                Cluster nearestCluster = null;
-                for (Cluster cluster : clusters) {
-                    double distance = mushroom.findCombinedDistance(cluster.centroid);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        nearestCluster = cluster;
-                    }
-                }
-                nearestCluster.clusterMushrooms.add(mushroom);
+
+        // this variable will increment with each change made to the centroid or groups of changes (for numeric attr.)
+        // and be used to determine if the centroid remain unchanged. If the centroid does not change, the method
+        // will return true, so the algorithm knows if its converging.
+        int changes = 0;
+
+        // Using the k-modes approach, we need to update the nominal attributes of our centroid
+        // based on the mushrooms in the cluster.
+        for(String attribute : this.centroid.getNominalAttributes().keySet()){
+            char mode = findMode(attribute);
+            if(this.centroid.getNominalAttributes().get(attribute) != mode){
+                changes ++;
             }
-    
-            // Update centroids of each cluster
-            for (Cluster cluster : clusters) {
-                if (!cluster.clusterMushrooms.isEmpty()) {
-                    Mushroom newCentroid = calculateCentroid(cluster.clusterMushrooms);
-                    cluster.centroid = newCentroid;
-                    cluster.clusterMushrooms.clear();
-                }
-            }
+            this.centroid.setNominalAttribute(attribute, findMode(attribute));
         }
-    
-        return clusters;
+
+        // Next, for the three numeric attributes, we will find the average over all the mushrooms in
+        // the cluster and set the value of the centroid's attributes to their respective means
+        double capDiameterAvg = 0;
+        double stemHeightAvg = 0;
+        double stemWidthAvg = 0;
+        int clusterSize = clusterMushrooms.size();
+        for(Mushroom m : clusterMushrooms){
+            capDiameterAvg += m.getCapDiameter();
+            stemHeightAvg += m.getStemHeight();
+            stemWidthAvg += m.getStemWidth();
+        }
+        capDiameterAvg = capDiameterAvg / clusterSize;
+        stemHeightAvg = stemHeightAvg / clusterSize;
+        stemWidthAvg = stemWidthAvg / clusterSize;
+
+        if(this.centroid.getCapDiameter() != capDiameterAvg || this.centroid.getStemHeight() !=
+            stemHeightAvg || this.centroid.getStemWidth() != stemWidthAvg){
+            changes++;
+        }
+
+        this.centroid.setCapDiameter(capDiameterAvg);
+        this.centroid.setStemHeight(stemHeightAvg);
+        this.centroid.setStemWidth(stemWidthAvg);
+
+        if(changes > 0){
+            return false;
+        }
+        return true;
     }
-    
-    private static Mushroom calculateCentroid(ArrayList<Mushroom> mushrooms) {
-        //get mushroom in center from list of mushrooms
+
+    private char findMode(String attribute){
+        HashMap<Character, Integer> valueCounts = new HashMap<>();
+        for(Mushroom m : clusterMushrooms){
+            char val = m.getNominalAttribute(attribute);
+            if(valueCounts.containsKey(val)){
+                valueCounts.put(val, valueCounts.get(val) + 1);
+            }else{
+                valueCounts.put(val, 1);
+            }
+        }
+
+        char mode = clusterMushrooms.get(0).getNominalAttribute(attribute);
+        int mode_count = 1;
+        for(Map.Entry<Character, Integer> val : valueCounts.entrySet()){
+            if(val.getValue() > mode_count){
+                mode = val.getKey();
+                mode_count = val.getValue();
+            }
+        }
+        return mode;
     }
 }
