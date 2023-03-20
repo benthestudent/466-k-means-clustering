@@ -57,14 +57,20 @@ public class Mushroom {
 
     private char classification;
     private HashMap<String, Character> nominalAttributes;
+    private HashMap<String, Character> nominalAttributesThatMatter;
 
-    public Mushroom(double capDiameter, double stemHeight, double stemWidth, HashMap<String, Character> nominals){
+    public Mushroom(double capDiameter, double stemHeight, double stemWidth, HashMap<String, Character> nominals,
+    HashMap<String, Character> nominalsThatMatter){
         this.capDiameter =capDiameter;
         this.stemHeight = stemHeight;
         this.stemWidth = stemWidth;
         this.nominalAttributes = new HashMap<>();
+        this.nominalAttributesThatMatter = new HashMap<>();
         for(String attr : nominals.keySet()){
             this.nominalAttributes.put(attr, nominals.get(attr));
+        }
+        for(String attr : nominalsThatMatter.keySet()){
+            this.nominalAttributesThatMatter.put(attr, nominalsThatMatter.get(attr));
         }
     }
     public Mushroom(char classification, double capDiameter, char capShape, char capSurface, char capColor, char bruiseOrBleeds,
@@ -73,37 +79,65 @@ public class Mushroom {
         char ringType, char sporePrintColor, char habitat, char season) {
         this.classification = classification;
         this.nominalAttributes = new HashMap<>();
+        this.nominalAttributesThatMatter = new HashMap<>();
+
         this.capDiameter = capDiameter;
+
         this.nominalAttributes.put("capShape", capShape);
+        this.nominalAttributesThatMatter.put("capShape", capShape);
         this.capShape = capShape;
+
         this.nominalAttributes.put("capSurface", capSurface);
+        this.nominalAttributesThatMatter.put("capSurface", capSurface);
         this.capSurface = capSurface;
+
         this.nominalAttributes.put("capColor", capColor);
+        this.nominalAttributesThatMatter.put("capColor", capColor);
         this.capColor = capColor;
+
         this.nominalAttributes.put("bruiseOrBleeds", bruiseOrBleeds);
+        this.nominalAttributesThatMatter.put("bruiseOrBleeds", bruiseOrBleeds);
         this.bruiseOrBleeds = bruiseOrBleeds;
+
         this.nominalAttributes.put("gillAttachment", gillAttachment);
         this.gillAttachment = gillAttachment;
+
         this.nominalAttributes.put("gillColor", gillColor);
+        this.nominalAttributesThatMatter.put("gillColor", gillColor);
         this.gillColor = gillColor;
+
         this.stemHeight = stemHeight;
         this.stemWidth = stemWidth;
+
         this.nominalAttributes.put("stemRoot", stemRoot);
+        this.nominalAttributesThatMatter.put("stemRoot", stemRoot);
         this.stemRoot = stemRoot;
+
         this.nominalAttributes.put("stemSurface", stemSurface);
         this.stemSurface = stemSurface;
+
         this.nominalAttributes.put("stemColor", stemColor);
+        this.nominalAttributesThatMatter.put("stemColor", stemColor);
         this.stemColor = stemColor;
+
         this.nominalAttributes.put("veilType", veilType);
         this.veilType = veilType;
+
         this.nominalAttributes.put("veilColor", veilColor);
+        this.nominalAttributesThatMatter.put("veilColor", veilColor);
         this.veilColor = veilColor;
+
         this.nominalAttributes.put("hasRing", hasRing);
+        this.nominalAttributesThatMatter.put("hasRing", hasRing);
         this.hasRing = hasRing;
+
         this.nominalAttributes.put("ringType", ringType);
         this.ringType = ringType;
+
         this.nominalAttributes.put("sporePrintColor", sporePrintColor);
+        this.nominalAttributesThatMatter.put("sporePrintColor", sporePrintColor);
         this.sporePrintColor = sporePrintColor;
+
         this.nominalAttributes.put("habitat", habitat);
         this.habitat = habitat;
         this.nominalAttributes.put("season", season);
@@ -138,9 +172,9 @@ public class Mushroom {
         //HashMap<String, Double> featureDistances = new HashMap<>();
         ArrayList<Double> euclideanDistances = new ArrayList<>();
 
-        euclideanDistances.add(findSingleEuclidDist(other.capDiameter, this.capDiameter));
-        euclideanDistances.add(findSingleEuclidDist(other.stemHeight, this.stemHeight));
-        euclideanDistances.add(findSingleEuclidDist(other.stemWidth, this.stemWidth));
+        //euclideanDistances.add(findSingleEuclidDist(other.capDiameter, this.capDiameter));
+        //euclideanDistances.add(findSingleEuclidDist(other.stemHeight, this.stemHeight));
+        //euclideanDistances.add(findSingleEuclidDist(other.stemWidth, this.stemWidth));
 
         // Ben: I am removing the following code because my nominalDistance method finds the
         // distance using all the nominal attributes with the simple matching method
@@ -163,9 +197,10 @@ public class Mushroom {
 //        euclideanDistances.add(findSingleEuclidDist(other.habitat, this.habitat));
 //        euclideanDistances.add(findSingleEuclidDist(other.season, this.season));
 
-
+        //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
         double nominalDist = findNominalDistance(other);
-
+        return nominalDist;
+        /*
         double vectorMagnitude = 0.0;
         for(double val: euclideanDistances){
             vectorMagnitude += val*val;
@@ -175,6 +210,8 @@ public class Mushroom {
         // data, I am going to give both sets of attributes a weight proportional to the number
         // of categories they represent (i.e. because 3 of 19 attr. are numeric their weight
         // will be 3/19, and the weight of the nominal distance will be 16/19)
+
+         
         int numAttr = euclideanDistances.size() + nominalAttributes.size();
         vectorMagnitude *= (double) euclideanDistances.size() / numAttr;
 
@@ -189,14 +226,15 @@ public class Mushroom {
         }
         //I am not sure if the math checks out on this but I think the following should work
         double normalizedNominalDist = (nominalDist * (double) nominalAttributes.size() / numAttr) / vectorMagnitude;
-
+        
          double sum = 0.0;
          for(double val: euclideanDistances){
              sum += val;
          }
-         sum += normalizedNominalDist;
+         //sum += normalizedNominalDist;
 
         return sum;
+        */
     }
 
     public static double findSingleEuclidDist(double a, double b) {
@@ -222,10 +260,13 @@ public class Mushroom {
         //Nominal Categories: capShape, capSurface, capColor, bruiseOrBleeds, gillAttachment
         //                      gillColor, stemRoot, stemSurface, stemColor, veilType, veilColor
         //                      hasRing, ringType, sporePrintColor, habitat, season
-        int numOfNomAtt = nominalAttributes.size();
+        //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
+        
+
+        int numOfNomAtt = nominalAttributesThatMatter.size();
         int mismatches = 0;
-        for(String attr : nominalAttributes.keySet()){
-            if(this.nominalAttributes.get(attr) != other.nominalAttributes.get(attr)){
+        for(String attr : nominalAttributesThatMatter.keySet()){
+            if(this.nominalAttributesThatMatter.get(attr) != other.nominalAttributesThatMatter.get(attr)){
                 mismatches++;
             }
         }
@@ -287,7 +328,7 @@ public class Mushroom {
         return this.classification;
     }
     public Mushroom copy(){
-        Mushroom clone = new Mushroom(this.capDiameter, this.stemHeight, this.stemWidth, this.nominalAttributes);
+        Mushroom clone = new Mushroom(this.capDiameter, this.stemHeight, this.stemWidth, this.nominalAttributes,  this.nominalAttributesThatMatter);
         return clone;
     }
 

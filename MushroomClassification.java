@@ -78,11 +78,6 @@ public class MushroomClassification {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Print the data
-        for (Mushroom mushroom : data) {
-            System.out.println(mushroom);
-        }
         return data;
     }
 
