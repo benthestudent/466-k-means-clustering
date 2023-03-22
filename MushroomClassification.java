@@ -9,12 +9,17 @@ public class MushroomClassification {
         ArrayList<Mushroom> mushrooms = new ArrayList<>();
         mushrooms = readData();
 
-        ArrayList<Cluster> clusters = new ArrayList<>();
-        clusters = kMeans(mushrooms, 20, 10);
+        ArrayList<Cluster> selectiveClusters = new ArrayList<>();
+        selectiveClusters = kMeans(mushrooms, 2, 50, "selective");
+
+        ArrayList<Cluster> nonSelectiveClusters = new ArrayList<>();
+        nonSelectiveClusters = kMeans(mushrooms, 2, 50, "all");
 
         System.out.println("Complete");
-
-        clusterEvaluation(clusters);
+        System.out.println("Evaluating CLusters using all attributes:");
+        clusterEvaluation(nonSelectiveClusters);
+        System.out.println("Evaluating CLusters using selected attributes:");
+        clusterEvaluation(selectiveClusters);
     }
 
     public static char emptyLineCheck(String line){
@@ -82,7 +87,7 @@ public class MushroomClassification {
     }
 
 
-    public static ArrayList<Cluster> kMeans(ArrayList<Mushroom> mushrooms, int k, int maxIterations) {
+    public static ArrayList<Cluster> kMeans(ArrayList<Mushroom> mushrooms, int k, int maxIterations, String distType) {
         // Initialize k clusters with random centroids
         ArrayList<Cluster> clusters = new ArrayList<>();
         for (int i = 0; i < k; i++) {
@@ -103,7 +108,7 @@ public class MushroomClassification {
                 double minDistance = Double.MAX_VALUE;
                 Cluster nearestCluster = null;
                 for (Cluster cluster : clusters) {
-                    double distance = mushroom.findDistance(cluster.centroid);
+                    double distance = mushroom.findDistance(cluster.centroid, distType);
                     if (distance < minDistance) {
                         minDistance = distance;
                         nearestCluster = cluster;

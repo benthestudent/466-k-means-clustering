@@ -24,10 +24,10 @@ public class Cluster {
         this.clusterMushrooms = new ArrayList<>();
     }
 
-    public double findDensity() {
+    public double findDensity(String distanceType) {
         double squareSum = 0.0;
         for(Mushroom shroom: clusterMushrooms){
-            squareSum += shroom.findDistance(centroid) * shroom.findDistance(centroid);
+            squareSum += shroom.findDistance(centroid, distanceType) * shroom.findDistance(centroid, distanceType);
         }
         return Math.sqrt(squareSum) / clusterMushrooms.size();
     }

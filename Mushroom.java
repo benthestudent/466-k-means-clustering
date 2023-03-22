@@ -167,42 +167,33 @@ public class Mushroom {
              + "Season: " + season;
     }
 
-    public double findDistance(Mushroom other){
-        //find Euclidian distance between numeric values of this mushroom object and the other mushroom
-        //HashMap<String, Double> featureDistances = new HashMap<>();
+
+    public double findDistance(Mushroom other, String type){
+        //find distance between this mushroom object and the other mushroom
+
+        //if type = "selective" use only the nominal attributes determined to most likely indicate
+        //whether a mushroom is poisonous or edible (stored in the variable nominalAttributesThatMatter
+        if(type == "selective"){
+            return findSelectiveNominalDistance(other);
+        }
+
+        //if type = "all" (or really anything but "selective") use all attributes for calculation, finding euclidian distances of numeric attributes
+        //and using the simple matching method to find distance for all the nominal attributes. Combine and normalize.
         ArrayList<Double> euclideanDistances = new ArrayList<>();
 
-        //euclideanDistances.add(findSingleEuclidDist(other.capDiameter, this.capDiameter));
-        //euclideanDistances.add(findSingleEuclidDist(other.stemHeight, this.stemHeight));
-        //euclideanDistances.add(findSingleEuclidDist(other.stemWidth, this.stemWidth));
+        euclideanDistances.add(findSingleEuclidDist(other.capDiameter, this.capDiameter));
+        euclideanDistances.add(findSingleEuclidDist(other.stemHeight, this.stemHeight));
+        euclideanDistances.add(findSingleEuclidDist(other.stemWidth, this.stemWidth));
 
-        // Ben: I am removing the following code because my nominalDistance method finds the
-        // distance using all the nominal attributes with the simple matching method
-        // which I think will give better results than one-hot encoding, and so we won't
-        // need these.
-//        euclideanDistances.add(findSingleEuclidDist(other.capShape, this.capShape));
-//        euclideanDistances.add(findSingleEuclidDist(other.capSurface, this.capSurface));
-//        euclideanDistances.add(findSingleEuclidDist(other.capColor, this.capColor));
-//        euclideanDistances.add(findSingleEuclidDist(other.bruiseOrBleeds, this.bruiseOrBleeds));
-//        euclideanDistances.add(findSingleEuclidDist(other.gillAttachment, this.gillAttachment));
-//        euclideanDistances.add(findSingleEuclidDist(other.gillColor, this.gillColor));
-//        euclideanDistances.add(findSingleEuclidDist(other.stemRoot, this.stemRoot));
-//        euclideanDistances.add(findSingleEuclidDist(other.stemSurface, this.stemSurface));
-//        euclideanDistances.add(findSingleEuclidDist(other.stemColor, this.stemColor));
-//        euclideanDistances.add(findSingleEuclidDist(other.veilType, this.veilType));
-//        euclideanDistances.add(findSingleEuclidDist(other.veilColor, this.veilColor));
-//        euclideanDistances.add(findSingleEuclidDist(other.hasRing, this.hasRing));
-//        euclideanDistances.add(findSingleEuclidDist(other.ringType, this.ringType));
-//        euclideanDistances.add(findSingleEuclidDist(other.sporePrintColor, this.sporePrintColor));
-//        euclideanDistances.add(findSingleEuclidDist(other.habitat, this.habitat));
-//        euclideanDistances.add(findSingleEuclidDist(other.season, this.season));
 
-        //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
+
         double nominalDist = findNominalDistance(other);
-        return nominalDist;
-        /*
+
+
+        int numAttr = euclideanDistances.size() + nominalAttributes.size();
         double vectorMagnitude = 0.0;
         for(double val: euclideanDistances){
+            val *= (double) 1 / numAttr;
             vectorMagnitude += val*val;
         }
 
@@ -211,9 +202,7 @@ public class Mushroom {
         // of categories they represent (i.e. because 3 of 19 attr. are numeric their weight
         // will be 3/19, and the weight of the nominal distance will be 16/19)
 
-         
-        int numAttr = euclideanDistances.size() + nominalAttributes.size();
-        vectorMagnitude *= (double) euclideanDistances.size() / numAttr;
+
 
         // add the weighted nominal Distance to the vector's magnitude
         vectorMagnitude += nominalDist * (double) nominalAttributes.size() / numAttr;
@@ -221,7 +210,8 @@ public class Mushroom {
         vectorMagnitude = Math.sqrt(vectorMagnitude);
 
         for(int i = 0; i < euclideanDistances.size(); i++){
-            double normalizedDist = (double) euclideanDistances.get(i) / vectorMagnitude;
+            double weightedDist = euclideanDistances.get(i) * (double) 1 / numAttr;
+            double normalizedDist = weightedDist / vectorMagnitude;
             euclideanDistances.set(i, normalizedDist);
         }
         //I am not sure if the math checks out on this but I think the following should work
@@ -231,11 +221,11 @@ public class Mushroom {
          for(double val: euclideanDistances){
              sum += val;
          }
-         //sum += normalizedNominalDist;
+         sum += normalizedNominalDist;
 
         return sum;
-        */
     }
+
 
     public static double findSingleEuclidDist(double a, double b) {
         return Math.sqrt((a-b)*(a-b));
@@ -263,6 +253,28 @@ public class Mushroom {
         //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
         
 
+        int numOfNomAtt = nominalAttributes.size();
+        int mismatches = 0;
+        for(String attr : nominalAttributes.keySet()){
+            if(this.nominalAttributes.get(attr) != other.nominalAttributes.get(attr)){
+                mismatches++;
+            }
+        }
+
+        return (double) mismatches / numOfNomAtt;
+    }
+
+    public double findSelectiveNominalDistance(Mushroom other){
+        //find distance between nominal values of this mushroom object and another mushroom
+        //only using attributes determined to more likely indicate whether or not a mushroom
+        //is poisonous or edible
+
+        //Nominal Categories: capShape, capSurface, capColor, bruiseOrBleeds, gillAttachment
+        //                      gillColor, stemRoot, stemSurface, stemColor, veilType, veilColor
+        //                      hasRing, ringType, sporePrintColor, habitat, season
+        //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
+
+
         int numOfNomAtt = nominalAttributesThatMatter.size();
         int mismatches = 0;
         for(String attr : nominalAttributesThatMatter.keySet()){
@@ -273,13 +285,6 @@ public class Mushroom {
 
         return (double) mismatches / numOfNomAtt;
     }
-
-    // Ben: removing this because the findDistance (previously findEuclidianDistance) Method
-    // now does this too and normalization.
-//    public double findCombinedDistance(Mushroom other){
-//        //find combined distance between this mushroom object and another mushroom
-//        return Math.sqrt(findEuclidianDistance(other)*findEuclidianDistance(other) + findNominalDistance(other)*findNominalDistance(other));
-//    }
 
     public double findF1Score(Mushroom other){
         return 0;

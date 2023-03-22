@@ -1,5 +1,19 @@
 New Tasks: (add tasks here if they come up)
-
+(The following are kinda just ideas. Idk if we need to do all of them, but if we have time, I think we should
+try to improve the algorithm)
+-Optimization ideas:
+    -Run alg hella times, pick the result in which clusters have best density
+    -Run alg hella times w diff k values and pick k which gives densest clusters or most accurate clusters
+    -f1 score, precision, accuracy (i think we need this idk)
+    -check out normalization and see if I (Ben) accidentally broke it by adding the nominal distances to it
+    -research other ways to optimize k-means/k-modes
+-Slides:
+    -problems we faced and attempts at optimization
+    -bar graphs of different results with different attempts to improve algorithm
+    -slide on how to pick k
+    -slide explaining k-modes / k-prototypes approach to categorical and mixed data
+        -explain distance method
+    -discussion on why k-means might not be the best alg for the data (assuming the results stay kinda bad)
 
 
 
@@ -7,7 +21,7 @@ Ben
 DONE -create Mushroom class
 DONE - nominal distance method (k-modes)
 DONE -reassign cluster based on k-modes approach
-DONE -cluster evaluation method to determine density and if clusters are good enough
+ -cluster evaluation method to determine density and if clusters are good enough
 
 Daksh
 DONE -read/process in data
