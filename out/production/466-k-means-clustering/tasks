@@ -1,15 +1,13 @@
 New Tasks: (add tasks here if they come up)
-- add convergence condition to k-means alg
 
 
 
 
 Ben
 DONE -create Mushroom class
--nominal distance method (k-modes)
--combine distances with k-prototypes approach (dakshs approach may already be doing this)
--reassign cluster based on k-modes approach
--cluster evaluation method to determine density and if clusters are good enough
+DONE - nominal distance method (k-modes)
+DONE -reassign cluster based on k-modes approach
+DONE -cluster evaluation method to determine density and if clusters are good enough
 
 Daksh
 DONE -read/process in data
@@ -20,7 +18,7 @@ DONE -some way to combine the distances (http://www.econ.upf.edu/~michael/stanfo
 Filip
 DONE -euclidian distance method
 -main method
--k-means clustering alg method -> fills hashmap with clusters
+-k-means clustering alg method -> fills hashmap with clusters (essentially done but probably needs tweeking -Ben)
 DONE -create Cluster class - contains arraylist of mushrooms, centroid, findDensity
 
 Notes:

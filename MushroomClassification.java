@@ -10,7 +10,7 @@ public class MushroomClassification {
         mushrooms = readData();
 
         ArrayList<Cluster> clusters = new ArrayList<>();
-        clusters = kMeans(mushrooms, 2, 20);
+        clusters = kMeans(mushrooms, 20, 10);
 
         System.out.println("Complete");
 
