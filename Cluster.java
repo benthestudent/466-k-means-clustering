@@ -27,9 +27,11 @@ public class Cluster {
     public double findDensity(String distanceType) {
         double squareSum = 0.0;
         for(Mushroom shroom: clusterMushrooms){
-            squareSum += shroom.findDistance(centroid, distanceType) * shroom.findDistance(centroid, distanceType);
+            double dist = shroom.findDistance(centroid, distanceType);
+            dist *= dist;
+            squareSum += dist;
         }
-        return Math.sqrt(squareSum) / clusterMushrooms.size();
+        return (double) Math.sqrt(squareSum) / clusterMushrooms.size();
     }
 
 
@@ -89,10 +91,12 @@ public class Cluster {
         HashMap<Character, Integer> valueCounts = new HashMap<>();
         for(Mushroom m : clusterMushrooms){
             char val = m.getNominalAttribute(attribute);
-            if(valueCounts.containsKey(val)){
-                valueCounts.put(val, valueCounts.get(val) + 1);
-            }else{
-                valueCounts.put(val, 1);
+            if(val != 0) {
+                if (valueCounts.containsKey(val)) {
+                    valueCounts.put(val, valueCounts.get(val) + 1);
+                } else {
+                    valueCounts.put(val, 1);
+                }
             }
         }
 

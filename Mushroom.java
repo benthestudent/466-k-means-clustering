@@ -253,9 +253,14 @@ public class Mushroom {
         //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
         
 
-        int numOfNomAtt = nominalAttributes.size();
+        int numOfNomAtt = 0;
         int mismatches = 0;
         for(String attr : nominalAttributes.keySet()){
+            // check to see if either attribute is missing from the data, if it is, don't consider it.
+            if(this.nominalAttributes.get(attr) == 0 || other.nominalAttributes.get(attr) == 0){
+                continue;
+            }
+            numOfNomAtt++;
             if(this.nominalAttributes.get(attr) != other.nominalAttributes.get(attr)){
                 mismatches++;
             }
@@ -275,9 +280,14 @@ public class Mushroom {
         //attributes that matter: capShape, capColor, bruiseOrBleeds, gillColor, stemRoot, stemColor, veilColor, hasRing, sporePrintColor
 
 
-        int numOfNomAtt = nominalAttributesThatMatter.size();
+        int numOfNomAtt = 0;
         int mismatches = 0;
         for(String attr : nominalAttributesThatMatter.keySet()){
+            // check to see if either attribute is missing from the data, if it is, don't consider it.
+            if(this.nominalAttributesThatMatter.get(attr) == 0 || other.nominalAttributesThatMatter.get(attr) == 0){
+                continue;
+            }
+            numOfNomAtt++;
             if(this.nominalAttributesThatMatter.get(attr) != other.nominalAttributesThatMatter.get(attr)){
                 mismatches++;
             }
@@ -337,4 +347,24 @@ public class Mushroom {
         return clone;
     }
 
+    public boolean different(Mushroom other, String attributeSelector){
+        if(attributeSelector == "selective"){
+            for(String attr : nominalAttributesThatMatter.keySet()){
+                if(this.nominalAttributesThatMatter.get(attr) != other.nominalAttributesThatMatter.get(attr)){
+                    return true;
+                }
+            }
+        }
+        if(attributeSelector == "all"){
+            for(String attr : nominalAttributes.keySet()){
+                if(this.nominalAttributes.get(attr) != other.nominalAttributes.get(attr)){
+                    return true;
+                }
+            }
+            if(!(this.capDiameter == other.capDiameter && this.stemHeight == other.stemHeight && this.stemWidth == other.stemWidth)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
