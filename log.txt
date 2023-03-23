@@ -1,0 +1,14 @@
+Task Log:
+
+Mar. 5: BEN - initialize project files with dataset and Mushroom and Cluster Classes (30 min)
+Mar. 10: DAKSH - read/process in data, alter Mushroom class to work with the data, and store data as arraylist of Mushroom objects (1.5 hours)
+Mar. 16: FILIP - Finished Euclidean Distance function and Cluster Class (1.5 hours)
+Mar. 17: DAKSH - write k means algorithm (1.5 hours)
+Mar. 19: FILIP - General findDistance method with one hot encoding (2 hours)
+Mar. 19: BEN - fix distance methods to work with nominal attributes, added updateCluster method using k-modes approach, debugged k-means algorithm method until it ran without errors (3 hrs)
+Mar. 20: DAKSH - Alter findDistance method to use only Selected attributes (1 hr)
+Mar. 20: DAKSH - slides (1 hour)
+Mar. 22: BEN - write silhouette score, entropy, purity, and evaluation functions (1 hr)
+Mar. 23: FILIP - slides (1 hour)
+Mar. 23: BEN - slides (1 hour)
+
