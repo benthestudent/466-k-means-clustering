@@ -11,7 +11,8 @@ public class MushroomClassification {
         ArrayList<Mushroom> mushrooms = new ArrayList<>();
         mushrooms = readData(-1);
 
-        String distType = "all";
+        //distType can either be "all" to use all the attributes or "selective" to use the 9 best attributes
+        String distType = "selective";
         ArrayList<Cluster> selectiveClusters = new ArrayList<>();
         for(int k = 2; k <= 10; k++){
             selectiveClusters = kMeans(mushrooms, k, 20, distType);
