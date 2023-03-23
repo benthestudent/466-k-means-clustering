@@ -230,18 +230,7 @@ public class Mushroom {
     public static double findSingleEuclidDist(double a, double b) {
         return Math.sqrt((a-b)*(a-b));
     }
-
-    // commenting these out bc the findNominalDist method should replace them
-//    public static double findSingleEuclidDist(boolean a, boolean b){
-//        return a == b ? 0.0 : 2.0;
-//    }
-//
-//    public static double findSingleEuclidDist(char a, char b){
-//        //Using one hot encoding, catagorical data represented as array, get euclidean dist of array
-//        //In this case if they match euclid
-//        return a == b ? 0.0 : 2.0;
-//    }
-
+    
 
 
     public double findNominalDistance(Mushroom other){
