@@ -11,11 +11,11 @@ public class MushroomClassification {
         ArrayList<Mushroom> mushrooms = new ArrayList<>();
         mushrooms = readData(-1);
 
-        String distType = "selective";
+        String distType = "all";
         ArrayList<Cluster> selectiveClusters = new ArrayList<>();
-        for(int k = 10; k <= 10; k++){
-            selectiveClusters = kMeans(mushrooms, k, 50, distType);
-            System.out.printf("Evaluating Algorithm Using Selected Attributes and k=%d: \n", k);
+        for(int k = 2; k <= 10; k++){
+            selectiveClusters = kMeans(mushrooms, k, 20, distType);
+            System.out.printf("Evaluating Algorithm Using All Attributes and k=%d: \n", k);
             clusterEvaluation(selectiveClusters, distType);
             System.out.println();
         }
